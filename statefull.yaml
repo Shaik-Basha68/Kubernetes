@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jenkins-statefulset
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: jenkins-pod
+  template:
+    metadata:
+      labels:
+        app: jenkins-pod
+    spec:
+      containers:
+        - name: jenkins-container
+          image: jenkins
+          port:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 150Mi
+            limits:
+              cpu: 200m
+              memory: 250Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-service
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: jenkins-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30010

@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+    name: maven-webapp-replicaset
+    namespace: staging
+spec:
+    replicas: 2
+    selector:
+        matchLabels: # Corrected typo here
+            app: web-app
+    template:
+        metadata:
+            labels:
+                app: web-app
+        spec: # Added `spec` under `template`
+            containers:
+                - name: maven-webapp-container
+                  image: bashadockerhubdemo/maven-web-application:1
+                  ports:
+                      - containerPort: 8080
+            resources:
+                limits:
+                    memory: "50Mi"
+                    cpu: "100m"
+                requests:
+                    memory: "50Mi"
+                    cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: maven-webapp-service
+    namespace: staging
+spec:
+    selector:
+        app: web-app
+    type: NodePort
+    ports:
+        - protocol: TCP
+          port: 80
+          targetPort: 8080
+          nodePort: 30084

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: login-app
+  namespace: production
+  labels:
+    app: logiapp
+spec:
+  containers:
+    - name: loginapp-container
+      image: bashadockerhubdemo/loginapp:1
+      ports:
+        - containerPort: 8080
+      resources:
+        requests:
+          cpu: "200m"
+          memory: "200Mi"
+        limits:
+          cpu: "400m"
+          memory: "400Mi"
+      volumeMounts:
+        - name: log-volume
+          mountPath: /usr/local/tomcat/logs
+  livenessProbe:
+    httpGet:
+      path: /
+      port: 8080
+    initialDelaySeconds: 30
+    periodSeconds: 10
+  volumes:
+    - name: log-volume
+      hostPath:
+        path: /mnt/d/K8/logfiles
+        type: Directory
+
+  imagePullSecrets:
+    - name: my-dockerhub-secret
