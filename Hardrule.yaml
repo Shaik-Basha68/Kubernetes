@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hardrule-pod
+  namespace: default
+  labels:
+    app: hardrule-app
+spec:
+  containers:
+    - name: hardrule-container
+      image: bashadockerhubdemo/maven-web-application:1
+      ports:
+        - containerPort: 8080
+      resources:
+        requests:
+          cpu: "150m"
+          memory: "250Mi"
+        limits:
+          cpu: "300m"
+          memory: "500Mi"
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                  - ssd

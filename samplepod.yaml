@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: javawebapp
+  namespace: test
+  labels:
+    app: webapp
+spec:
+  containers:
+    - name: jabeweb
+      image: bashadockerhubdemo/maven-web-application:1
+      ports:
+        - containerPort: 8080
+      resources:
+        requests:
+          cpu: "150m"
+          memory: "256Mi"
+        limits:
+          cpu: "300m"
+          memory: "512Mi"

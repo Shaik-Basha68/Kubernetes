@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-default-ns-pod
+  labels:
+    app: myapp
+  namespace: default
+spec:
+  containers:
+    - name: myapp-container
+      image: bashadockerhubdemo/maven-web-application:1
+      ports:
+        - containerPort: 8080
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "100Mi"
+        limits:
+          cpu: "200m"
+          memory: "200Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-default-ns-service
+  namespace: default
+spec:
+  selector:
+    app: myapp
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
